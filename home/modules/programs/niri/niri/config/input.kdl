@@ -1,0 +1,21 @@
+input {
+    keyboard {
+        xkb {
+            layout "us,tr"
+            //options "compose:ralt,ctrl:nocaps"
+            options "grp:shift_caps_toggle"
+        }
+        repeat-delay 250
+        repeat-rate 70
+    }
+
+    touchpad {
+        tap
+        dwt
+    }
+
+    focus-follows-mouse
+    warp-mouse-to-focus mode="center-xy-always"
+    workspace-auto-back-and-forth
+    disable-power-key-handling
+}

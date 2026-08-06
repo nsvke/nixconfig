@@ -1,0 +1,38 @@
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png"
+
+environment {
+    XCURSOR_SIZE "24"
+    QT_CURSOR_SIZE "24"
+    LIBVA_DRIVER_NAME "nvidia"
+    __GLX_VENDOR_LIBRARY_NAME "nvidia"
+    XCURSOR_THEME "Bibata-Modern-Ice"
+    QT_QPA_PLATFORM "wayland"
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+    QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
+    XDG_SESSION_TYPE "wayland"
+    XDG_CURRENT_DESKTOP "niri"
+    QT_QPA_PLATFORMTHEME "gtk3"
+}
+
+cursor {
+    xcursor-size 24
+    xcursor-theme "Bibata-Modern-Ice"
+
+    hide-when-typing
+    hide-after-inactive-ms 1000
+}
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+recent-windows {
+    off
+}
+
+gestures {
+    hot-corners {
+        off
+    }
+}

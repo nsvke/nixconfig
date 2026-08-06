@@ -1,0 +1,38 @@
+layer-rule {
+    match namespace="^wpaperd-eDP-1$"
+    match namespace="^wallpaper$"
+    place-within-backdrop true
+}
+
+layer-rule {
+    match namespace="waybar"
+    match at-startup=true
+
+    shadow {
+        on
+        softness 40
+        spread 5
+        offset x=0 y=5
+        draw-behind-window true
+        color "#00000064"
+    }
+}
+
+layer-rule {
+    match namespace="^launcher$"
+    shadow {
+        on
+    }
+    baba-is-float true
+}
+
+// layer-rule {
+    // match namespace="^modal_power_dialog$"
+    // opacity 0.8 
+// }
+
+layer-rule {
+    match namespace="^modal_power_dialog$"
+    baba-is-float true
+    opacity 0.8
+}

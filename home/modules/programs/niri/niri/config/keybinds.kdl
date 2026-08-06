@@ -1,0 +1,114 @@
+binds {
+    MOD+SHIFT+ESCAPE                     { show-hotkey-overlay; }
+
+    MOD+Q                               { close-window; }
+    MOD+RETURN                          hotkey-overlay-title="open terminal" { spawn "footclient"; }
+    MOD+SPACE                           hotkey-overlay-title="open launcher" { spawn "fuzzel"; }
+    MOD+D                               hotkey-overlay-title="open clipboard" { spawn-sh "cliphist list | fuzzel --dmenu --prompt 'Pano > ' | cliphist decode | wl-copy"; }
+    MOD+Z                               hotkey-overlay-title="open browser" { spawn "firefox"; }
+    MOD+X                               hotkey-overlay-title="open browser helium" { spawn-sh "appimage-run ~/workspace/helium-0.12.5.1-x86_64.AppImage"; }
+    MOD+M                               hotkey-overlay-title="open mails" { spawn "footclient" "-a" "mails" "-e" "aerc"; }
+    XF86PowerOff                        hotkey-overlay-title="lock screen" { spawn "swaylock"; }
+    MOD+E                               hotkey-overlay-title="file manager" { spawn "footclient" "-a" "file-manager" "-e" "yazi"; }
+    MOD+T                               hotkey-overlay-title="open targets" { spawn "footclient" "-a" "targets" "-e" "hx" "~/workspace/z/.targets"; }
+    MOD+SHIFT+T                         hotkey-overlay-title="open tempnote" { spawn "footclient" "-a" "tmpnote" "-e" "fish" "-c" "tn"; }
+    MOD+SHIFT+B                         hotkey-overlay-title="boo screen" { spawn "footclient" "-a" "boo" "-e" "ghostty" "+boo"; }
+    MOD+B                               hotkey-overlay-title="toggle bar focus" { spawn "quickshell" "ipc" "call" "modal" "toggleBarFocus"; }
+    MOD+SHIFT+M                         hotkey-overlay-title="logout menu" { spawn "quickshell" "ipc" "call" "modal" "togglePowerDialog"; }
+    MOD+BACKSLASH                       hotkey-overlay-title="connection-popup" { spawn "/home/enes/shsh/connection.sh"; }
+    MOD+SHIFT+U                         hotkey-overlay-title="nixos system build" { spawn-sh "footclient -a nixos-rebuild -e sudo nixos-rebuild switch --flake /home/enes/.config/nixos/.#enes && exit" ; }
+    MOD+CTRL+SHIFT+LEFT                 hotkey-overlay-title="scroll view left" { spawn-sh "niri msg action focus-column-left && niri msg action focus-column-right"; }
+    MOD+CTRL+SHIFT+RIGHT                hotkey-overlay-title="scroll view rigth" { spawn-sh "niri msg action focus-column-right && niri msg action focus-column-left"; }
+    MOD+CTRL+LEFT                       hotkey-overlay-title="focus double left" { spawn-sh "niri msg action focus-column-left && niri msg action focus-column-left"; }
+    MOD+CTRL+RIGHT                      hotkey-overlay-title="focus double right" { spawn-sh "niri msg action focus-column-right && niri msg action focus-column-right"; }
+
+    MOD+GRAVE                           hotkey-overlay-title="notification history pop" { spawn "dunstctl" "history-pop"; }
+    MOD+SHIFT+GRAVE                           hotkey-overlay-title="notification close" { spawn "dunstctl" "close"; }
+            
+    XF86AUDIORAISEVOLUME                allow-when-locked=true { spawn "audio-control" "up"; }
+    XF86AUDIOLOWERVOLUME                allow-when-locked=true { spawn "audio-control" "down"; }
+    XF86AUDIOMUTE                       allow-when-locked=true { spawn "audio-control" "mute"; }
+    XF86AUDIOMICMUTE                    allow-when-locked=true { spawn "audio-control" "mic-mute"; }
+    XF86AudioNext                       { spawn "playerctl" "next"; }
+    XF86AudioPause                      { spawn "playerctl" "play-pause"; }
+    XF86AudioPlay                       { spawn "playerctl" "play-pause"; }
+    XF86AudioPrev                       { spawn "playerctl" "previous"; }
+    XF86MonBrightnessUp                 allow-when-locked=true { spawn-sh "brightnessctl s 5%+ && notify-send -a 'System' -t 1000 -h string:x-canonical-private-synchronous:brightness -h int:value:$(($(brightnessctl g) * 100 / $(brightnessctl m))) \"󰃠 $(($(brightnessctl g) * 100 / $(brightnessctl m)))%\""; }
+    XF86MonBrightnessDown               allow-when-locked=true { spawn-sh "brightnessctl s 5%- && notify-send -a 'System' -t 1000 -h string:x-canonical-private-synchronous:brightness -h int:value:$(($(brightnessctl g) * 100 / $(brightnessctl m))) \"󰃠 $(($(brightnessctl g) * 100 / $(brightnessctl m)))%\""; }
+    // XF86KbdBrightnessUp                 allow-when-locked=true { spawn "asusctl" "leds" "next"; }
+    // XF86KbdBrightnessDown               allow-when-locked=true { spawn "asusctl" "leds" "prev"; }
+    XF86Launch4                         allow-when-locked=true { spawn-sh "asusctl profile next && notify-send -a 'Asusctl' -t 1000 -h string:x-canonical-private-synchronous:asusprofile \"$(asusctl profile get | grep Active)\""; }
+    // XF86Launch3                         allow-when-locked=true { spawn "asusctl" "aura" "-n"; }
+    MOD+SHIFT+XF86PowerOff              allow-when-locked=true { spawn "systemctl" "poweroff"; }
+
+    MOD+LEFT                            { focus-column-left; }
+    MOD+H                               { focus-column-left; }
+    MOD+RIGHT                           { focus-column-right; }
+    MOD+L                               { focus-column-right; }
+    MOD+UP                              { focus-window-up; }
+    MOD+K                               { focus-window-up; }
+    MOD+DOWN                            { focus-window-down; }
+    MOD+J                               { focus-window-down; }
+
+    MOD+SHIFT+LEFT                      { move-column-left; }
+    MOD+SHIFT+H                         { move-column-left; }
+    MOD+SHIFT+RIGHT                     { move-column-right; }
+    MOD+SHIFT+L                         { move-column-right; }
+    MOD+SHIFT+UP                        { move-window-up; }
+    MOD+SHIFT+K                         { move-window-up; }
+    MOD+SHIFT+DOWN                      { move-window-down; }
+    MOD+SHIFT+J                         { move-window-down; }
+
+    MOD+HOME                            { focus-column-first; }
+    MOD+END                             { focus-column-last; }
+    MOD+CTRL+HOME                       { move-column-to-first; }
+    MOD+CTRL+END                        { move-column-to-last; }
+
+    // MOD+CTRL+LEFT                       { focus-monitor-left; }
+    // MOD+CTRL+RIGHT                      { focus-monitor-right; }
+    // MOD+CTRL+UP                         { focus-monitor-up; }
+    // MOD+CTRL+DOWN                       { focus-monitor-down; }
+
+    // MOD+SHIFT+CTRL+LEFT                 { move-column-to-monitor-left; }
+    // MOD+SHIFT+CTRL+RIGHT                { move-column-to-monitor-right; }
+    // MOD+SHIFT+CTRL+UP                   { move-column-to-monitor-up; }
+    // MOD+SHIFT+CTRL+DOWN                 { move-column-to-monitor-down; }
+
+    MOD+ALT+DOWN                        cooldown-ms=150 { focus-workspace-down; }
+    MOD+ALT+UP                          cooldown-ms=150 { focus-workspace-up; }
+    MOD+CTRL+DOWN                       cooldown-ms=150 { move-column-to-workspace-down; }
+    MOD+CTRL+UP                         cooldown-ms=150 { move-column-to-workspace-up; }
+
+    MOD+1                               { focus-workspace-up; }
+    MOD+2                               { focus-workspace-down; }
+
+    MOD+SHIFT+1                          { move-column-to-workspace-up; }
+    MOD+SHIFT+2                          { move-column-to-workspace-down; }
+
+    MOD+TAB                             { focus-workspace-previous; }
+
+    MOD+R                               { switch-preset-column-width; }
+    MOD+F                               { maximize-column; } //{ expand-column-to-available-width; }
+    MOD+SHIFT+F                         { fullscreen-window; }
+    MOD+C                               { center-column; }
+    MOD+CTRL+C                          { center-visible-columns; }
+    MOD+MINUS                           { set-column-width "-10%"; }
+    MOD+EQUAL                           { set-column-width "+10%"; }
+    MOD+SHIFT+MINUS                     { set-window-height "-10%"; }
+    MOD+SHIFT+EQUAL                     { set-window-height "+10%"; }
+
+    MOD+V                               { toggle-window-floating; }
+    MOD+W                               { toggle-column-tabbed-display; }
+    MOD+BRACKETLEFT                     { consume-or-expel-window-left; }
+    MOD+BRACKETRIGHT                    { consume-or-expel-window-right; }
+
+
+    CTRL+SHIFT+F1                       { screenshot show-pointer=false; }
+    CTRL+SHIFT+F2                       { screenshot-screen show-pointer=false; }
+    CTRL+SHIFT+F3                       { screenshot-window; }
+
+    MOD+ESCAPE                          allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    CTRL+ALT+DELETE                     { quit; }
+    MOD+SHIFT+P                         { power-off-monitors; }
+    MOD+SLASH                           repeat=false { toggle-overview; }
+}

@@ -1,0 +1,101 @@
+window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+}
+
+window-rule { // for pop-up windows
+    match app-id=r#"^popup-window$"#
+    open-floating true
+    open-focused true
+    default-floating-position x=1100 y=10 relative-to="top-left"
+    default-window-height { fixed 500; }
+    default-column-width { fixed 800; }
+    focus-ring {
+        off
+    }
+}
+
+window-rule { 
+    match app-id="^imv$"
+    match app-id="^dev.zed.Zed$" title="^Zed — Settings$"
+    match app-id="^targets$"
+    open-floating true
+    open-focused true
+    focus-ring {
+        off
+    }
+
+}
+
+window-rule { // for wifi/bluetooth tui pop-up
+    match app-id="^connection-popup$"
+    open-floating true
+    open-focused true
+    // default-floating-position x=0 y=100 relative-to="top"
+    default-window-height { proportion 0.75; }
+    default-column-width { proportion 0.5; }
+    focus-ring {
+        off
+    }
+}
+
+window-rule { // for picture-in-picture mode
+    match title="^Görüntü içinde görüntü$"
+    match title="^Picture in picture$"
+    open-floating true
+    default-window-height { proportion 0.25; }
+    default-column-width { proportion 0.25; }
+    focus-ring {
+        off
+    }
+}
+
+window-rule { // fullscreen apps
+    // match app-id="^file-manager$"
+    // match app-id="^app.zen_browser.zen$"
+    // match app-id="^org.qutebrowser.qutebrowser$"
+    match app-id="^steam$"
+    // match app-id="^dev.zed.Zed$"
+    open-maximized true
+    focus-ring {
+        on
+    }
+}
+
+window-rule { // for steam pop-up windows
+    match app-id="^steam$"
+    exclude title="^Steam$"
+    open-floating true
+    focus-ring {
+        off
+    }
+}
+
+window-rule { // nixos system update 
+    match app-id="^nixos-rebuild$"
+    default-floating-position x=10 y=20 relative-to="top-right"
+    open-floating true
+    default-column-width { proportion 0.75; }
+    default-window-height { proportion 0.20; }
+    open-focused true
+    baba-is-float true
+    focus-ring {
+        off
+    }
+    
+}
+
+window-rule {
+    match app-id="^dev.zed.Zed$"
+    opacity 0.94
+    focus-ring {
+        off
+    }
+}
+
+window-rule {
+    match app-id="^boo$"
+    open-fullscreen true
+}
+
+// termfilechooser, center, 60%,60%
