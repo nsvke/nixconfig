@@ -5,7 +5,10 @@
   ];
 
   services = {
+    cliphist.enable = true;
+
     playerctld.enable = true;
+    
     swayidle = {
       enable = true;
       timeouts = [
@@ -15,7 +18,11 @@
         }
       ];
     };
-    udiskie.enable = true;
-    cliphist.enable = true;
+
+    udiskie = {
+      enable = true;
+      automount = true;
+      notify = true;
+    };
   };
 }

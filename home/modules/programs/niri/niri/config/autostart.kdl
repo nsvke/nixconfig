@@ -1,13 +1,4 @@
 spawn-at-startup "swaybg" "-i" "/home/enes/wallpapers/current" "-m" "fill"
 spawn-at-startup "quickshell"
-spawn-at-startup "dunst"
-spawn-at-startup "foot" "-s"
-// spawn-at-startup "swayidle" "-w" "timeout" "300" "niri msg action power-off-monitors"
-spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
-spawn-at-startup "udiskie" "--automount" "--notify"
 
-spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "DISPLAY" "XDG_CURRENT_DESKTOP"
-
-// spawn-sh-at-startup "systemctl --user import-environment &"
-// procspawn-sh-at-startup "hash dbus-update-activation-environment 2>/dev/null &"
-// spawn-sh-at-startup "dbus-update-activation-environment --systemd &"
+// spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "DISPLAY" "XDG_CURRENT_DESKTOP"
