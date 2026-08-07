@@ -23,11 +23,11 @@
     "modal-shell": {
       "flake": false,
       "locked": {
-        "lastModified": 1783860208,
-        "narHash": "sha256-RdoT+fcXGAq+wmsmv32MK8UcY9aLuMzPumPyn6ah2uA=",
+        "lastModified": 1786101491,
+        "narHash": "sha256-bXIQMRjdLdeL4wro/ScP0wkFe6XJjWcFGF0X9O/DyzM=",
         "owner": "nsvke",
         "repo": "modal",
-        "rev": "90408da6caba8a5fefcdb77695331ffe68dc71dc",
+        "rev": "08c9c9b481a60965d61c3bb5fafbbd8200f36f4e",
         "type": "github"
       },
       "original": {
