@@ -32,7 +32,10 @@
       enable = true;
       enableGitIntegration = true;
     };
-    zed-editor.enable = true;
+    zed-editor = {
+      enable = true;
+      extensions = ["Git Firefly" "TOML" "Make" "LOG" "Nix" "Colored Zed Icons Theme" "Github Dark Default" "OCaml" "QML" ];
+    };
 
     ghostty.enable = true;
 
