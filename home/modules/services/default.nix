@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./dunst.nix
@@ -14,7 +14,7 @@
       timeouts = [
         {
           timeout = 300;
-          command = "niri msg action power-off-monitors";
+          command = "${pkgs.niri}/bin/niri msg action power-off-monitors";
         }
       ];
     };
