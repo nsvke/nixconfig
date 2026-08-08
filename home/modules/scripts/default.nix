@@ -19,11 +19,21 @@ let
     ];
     text = builtins.readFile ./chck.sh;
   };
+  finit = pkgs.writeShellApplication {
+    name = "finit";
+    runtimeInputs = with pkgs; [
+      coreutils
+      helix
+      direnv
+    ];
+    text = builtins.readFile ./finit.sh;
+  };
 in
 pkgs.symlinkJoin {
   name = "home-scripts";
   paths = [
     audio-control
     chck
+    finit
   ];
 }
