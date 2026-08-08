@@ -15,9 +15,7 @@
       "hms" = "home-manager switch --flake /home/enes/.config/nixos/.#\"enes@rog\"";
       "zc" = "zeditor ~/.config/nixos";
       "screenshot" = "echo 'use ctrl+shift+f1'";
-      "ns" = "nix shell nixpkgs#";
-      "nr" = "nix run nixpkgs#";
-      
+
       "add_fish_alias" = "hx ~/.config/fish/config.fish";
 
       "nixenv" = "echo 'use nix' > .envrc && direnv allow";
@@ -30,6 +28,12 @@
     functions.tn.body = ''
       set -l tmp_file /tmp/(date +%s)
       hx $tmp_file
+    '';
+    functions.ns.body = ''
+      nix shell nixpkgs#$argv
+    '';
+    functions.nr.body = ''
+      nix run nixpkgs#$argv
     '';
   };
 }
