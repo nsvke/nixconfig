@@ -5,6 +5,7 @@
     ./yazi
     ./atuin.nix
     ./direnv.nix
+    ./firefox.nix
     ./fish.nix
     ./foot.nix
     ./fuzzel.nix
@@ -22,8 +23,6 @@
       presets = [ "plain-text-symbols" ];
     };
     zoxide.enable = true;
-
-    firefox.enable = true;
 
     aerc.enable = true;
 
