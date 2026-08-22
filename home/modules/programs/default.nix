@@ -16,6 +16,14 @@
   ];
 
   programs = {
+    bash = {
+      enable = true;
+      shellAliases = {
+        e = "exit";
+        g = "git";
+      };
+    };
+    
     starship = {
       enable = true;
       enableFishIntegration = true;
