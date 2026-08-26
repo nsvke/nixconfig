@@ -25,10 +25,10 @@ binds {
     MOD+GRAVE                           hotkey-overlay-title="notification history pop" { spawn "dunstctl" "history-pop"; }
     MOD+SHIFT+GRAVE                           hotkey-overlay-title="notification close" { spawn "dunstctl" "close"; }
             
-    XF86AUDIORAISEVOLUME                allow-when-locked=true { spawn "audio-control" "up"; }
-    XF86AUDIOLOWERVOLUME                allow-when-locked=true { spawn "audio-control" "down"; }
-    XF86AUDIOMUTE                       allow-when-locked=true { spawn "audio-control" "mute"; }
-    XF86AUDIOMICMUTE                    allow-when-locked=true { spawn "audio-control" "mic-mute"; }
+    XF86AUDIORAISEVOLUME                allow-when-locked=true { spawn "haudio" "up"; }
+    XF86AUDIOLOWERVOLUME                allow-when-locked=true { spawn "haudio" "down"; }
+    XF86AUDIOMUTE                       allow-when-locked=true { spawn "haudio" "mute"; }
+    XF86AUDIOMICMUTE                    allow-when-locked=true { spawn "haudio" "mic-mute"; }
     XF86AudioNext                       { spawn "playerctl" "next"; }
     XF86AudioPause                      { spawn "playerctl" "play-pause"; }
     XF86AudioPlay                       { spawn "playerctl" "play-pause"; }

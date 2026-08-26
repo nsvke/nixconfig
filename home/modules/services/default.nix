@@ -2,6 +2,7 @@
 {
   imports = [
     ./dunst.nix
+    ./fup.nix
   ];
 
   services = {

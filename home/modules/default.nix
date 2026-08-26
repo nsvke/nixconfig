@@ -1,15 +1,12 @@
-{ pkgs, ... }:
-let
-  home-scripts = pkgs.callPackage ./scripts { };
-in
+{ pkgs, flakeDir, ... }:
 {
   imports = [
     ./programs
     ./services
+    ./scripts
   ];
 
   home.packages = with pkgs; [
-    home-scripts
     nixd
     nil
     dante

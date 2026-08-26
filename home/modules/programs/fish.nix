@@ -11,9 +11,6 @@
       "zed" = "WGPU_POWER_PREF=low zeditor";
       "e" = "exit";
       "r" = "reset";
-      "sns" = "sudo nixos-rebuild switch --flake /home/enes/.config/nixos/.#enes";
-      "hms" = "home-manager switch --flake /home/enes/.config/nixos/.#\"enes@rog\"";
-      "zc" = "zeditor ~/.config/nixos";
       "screenshot" = "echo 'use ctrl+shift+f1'";
 
       "add_fish_alias" = "hx ~/.config/fish/config.fish";
@@ -26,8 +23,7 @@
       "phone" = "SDL_RENDER_DRIVER=vulkan scrcpy --turn-screen-off --stay-awake --no-audio --max-fps=60";
     };
     functions.tn.body = ''
-      set -l tmp_file /tmp/(date +%s)
-      hx $tmp_file
+      hx (mktemp)
     '';
     functions.ns.body = ''
       nix shell nixpkgs#$argv
