@@ -62,6 +62,9 @@
 
     imv.enable = true;
 
-    zathura.enable = true;
+    zathura = {
+      enable = true;
+      extraConfig = ''set selection-clipboard clipboard'';
+    };
   };
 }
