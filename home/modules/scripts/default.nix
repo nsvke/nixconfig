@@ -28,24 +28,19 @@ let
     ];
     text = builtins.readFile ./finit.sh;
   };
-  fup = pkgs.writeShellApplication {
-    name = "fup";
-    runtimeInputs = with pkgs; [ git nix jq libnotify coreutils ];
-    text = builtins.replaceStrings [ "@flakeDir@" ] [ flakeDir ] (builtins.readFile ./fup.sh);
-  };
   fns = pkgs.writeShellApplication {
     name = "fns";
     runtimeInputs = with pkgs; [ nixos-rebuild ];
     text = ''
-        sudo nixos-rebuild switch --flake "${flakeDir}#$(hostname)" "$@"
-      '';
+      sudo nixos-rebuild switch --flake "${flakeDir}#$(hostname)" "$@"
+    '';
   };
   fhs = pkgs.writeShellApplication {
     name = "fhs";
     runtimeInputs = with pkgs; [ home-manager ];
     text = ''
-        home-manager switch --flake "${flakeDir}#\"$(whoami)@$(hostname)\"" "$@"
-      '';
+      home-manager switch --flake "${flakeDir}#\"$(whoami)@$(hostname)\"" "$@"
+    '';
   };
   hnet = pkgs.writeShellApplication {
     name = "hnet";
@@ -66,6 +61,34 @@ let
     runtimeInputs = with pkgs; [ niri ];
     text = ''niri msg action spawn -- footclient -D "$PWD"'';
   };
+  newp = pkgs.writeShellApplication {
+    name = "newp";
+    runtimeInputs = with pkgs; [
+      coreutils
+      procps
+      niri
+      swaybg
+    ];
+    text = builtins.readFile ./newp.sh;
+  };
+  fup = pkgs.writeShellApplication {
+    name = "fup";
+    runtimeInputs = with pkgs; [
+      git
+      nix
+      libnotify
+      coreutils
+      python3
+      fuzzel
+    ];
+    text = ''
+      python3 ${
+        pkgs.writeText "fup.py" (
+          builtins.replaceStrings [ "@flakeDir@" ] [ flakeDir ] (builtins.readFile ./fup.py)
+        )
+      }
+    '';
+  };
 in
 {
   home.packages = [
@@ -77,5 +100,6 @@ in
     fhs
     hnet
     hfp
+    newp
   ];
 }

@@ -23,4 +23,24 @@
       corefonts
     ];
   };
+
+  environment.etc."vimrc".text = ''
+      syntax on
+      set number
+      set expandtab
+      set tabstop=4
+      set shiftwidth=4
+      set softtabstop=4
+      set ignorecase
+      set smartcase
+      set autoindent
+      set whichwrap+=<,>,[,]
+      set incsearch
+      set hlsearch
+      set laststatus=2
+      set mouse=a
+      set undolevels=1000
+      set showcmd
+      set ruler
+    '';
 }
