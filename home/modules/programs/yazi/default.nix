@@ -147,6 +147,11 @@
           on = [ "l" ];
           desc = "Smart enter";
         }
+        {
+          run = "plugin drag";
+          on = [ "<C-d>"];
+          desc = "Drag files";
+        }
         # {
           # run = "plugin smart-paste";
           # on = [ "p" ];
@@ -164,6 +169,7 @@
       smart-enter = pkgs.yaziPlugins.smart-enter;
       # smart-paste = pkgs.yaziPlugins.smart-paste;
       restore = pkgs.yaziPlugins.restore;
+      drag = pkgs.yaziPlugins.drag;
     };
   };
 }

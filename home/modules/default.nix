@@ -39,6 +39,7 @@
     xdg-utils
     unzip
     zip
+    ripdrag
     localsend
     bluetuith
     prismlauncher
