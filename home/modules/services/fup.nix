@@ -3,14 +3,17 @@
   systemd.user.services.fup = {
     Unit = {
       Description = "Auto update flake.lock";
-      After = [ "network-online.target" ];
-      Wants = [ "network-online.target" ];
+      StartLimitIntervalSec = "7200";
+      StartLimitBurst = 3;
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.writeShellScript "fup-runner" ''fup''}";
+      ExecStart = "${pkgs.writeShellScript "fup-runner" "fup"}";
       StandardOutput = "journal";
       StandardError = "journal";
+      Restart = "on-failure";
+      RestartPreventExitStatus = "2";
+      RestartSec = "1800";
     };
   };
 

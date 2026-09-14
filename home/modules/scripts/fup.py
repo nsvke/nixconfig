@@ -1,19 +1,33 @@
+import argparse
 import getpass
 import json
 import re
 import socket
+import subprocess
+from dataclasses import dataclass
 from enum import Enum
-from subprocess import run
 from sys import exit
+from typing import cast
 
 flake_dir = "@flakeDir@"
 # flake_dir = "/home/enes/.config/nixos/"
+
+
+@dataclass
+class Args(argparse.Namespace):
+    verbose: bool = False
+    ignore_dirty: bool = False
+    ignore_internet: bool = False
+
+
+fup_args = Args()
 
 
 class Status(Enum):
     OK = 0
     ERR = 1
     STOP = 2
+    DEFER = 3
 
     def is_ok(self):
         return self == Status.OK
@@ -24,34 +38,53 @@ class Status(Enum):
     def is_stop(self):
         return self == Status.STOP
 
+    def is_defer(self):
+        return self == Status.DEFER
+
     def exitcode(self):
-        if self.is_err():
-            return 1
-        else:
+        if self.is_ok() or self.is_stop():
             return 0
+        elif self.is_defer():
+            return 1
+        return 2
 
 
-def log(text: str):
+def log(text: str) -> None:
     print("fup: " + text)
 
 
-def notify(text: str):
-    if (
-        run(
-            ["notify-send", "-u", "normal", "Fup", text],
-            capture_output=True,
-            check=False,
-        ).returncode
-        != 0
-    ):
+def run(
+    cmd: list[str],
+    cwd: str | None = None,
+    input: str | None = None,
+) -> subprocess.CompletedProcess[str]:
+    result = subprocess.run(
+        cmd,
+        cwd=cwd,
+        input=input,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    if fup_args.verbose:
+        print(f"[RUN] {' '.join(cmd)}")
+        if result.stdout:
+            print(result.stdout, end="")
+        if result.stderr:
+            print(result.stderr, end="")
+
+    return result
+
+
+def notify(text: str) -> None:
+    if run(["notify-send", "-u", "normal", "Fup", text]).returncode != 0:
         log("notify failed")
 
 
-def rollback(notification: str):
+def rollback(notification: str) -> None:
     _ = run(
         ["git", "checkout", "flake.lock"],
-        capture_output=True,
-        check=False,
         cwd=flake_dir,
     )
     log("flake rollback")
@@ -59,29 +92,32 @@ def rollback(notification: str):
         notify(notification)
 
 
-def check_dirty(ignore: bool = False):
-    if run(
-        ["git", "status", "--porcelain"],
-        capture_output=True,
-        text=True,
-        check=False,
-        cwd=flake_dir,
-    ).stdout.strip():
-        if not ignore:
-            log("repo is dirty. skipping")
-            return Status.STOP
-        else:
-            log("repo is dirty. ignoring")
+def check_dirty(ignore: bool = False) -> Status:
+    if (
+        run(
+            ["git", "status", "--porcelain"],
+            cwd=flake_dir,
+        ).stdout.strip()
+        and not ignore
+    ):
+        log("repo is dirty")
+        return Status.STOP
 
     return Status.OK
 
 
-def update():
+def check_internet(ignore: bool = False) -> Status:
+    if (
+        run(["ping", "-q", "-c", "1", "-W", "1", "1.1.1.1"]).returncode != 0
+    ) and not ignore:
+        log("network is unreachable")
+        return Status.DEFER
+    return Status.OK
+
+
+def update() -> Status:
     flake_update = run(
         ["nix", "flake", "update"],
-        capture_output=True,
-        text=True,
-        check=False,
         cwd=flake_dir,
     )
 
@@ -92,8 +128,6 @@ def update():
     if (
         run(
             ["git", "diff", "--quiet", "flake.lock"],
-            capture_output=True,
-            check=False,
             cwd=flake_dir,
         ).returncode
         == 0
@@ -104,7 +138,7 @@ def update():
     return Status.OK
 
 
-def dry_build_and_check():
+def dry_build_and_check() -> Status:
     flake_dry_build = run(
         [
             "nix",
@@ -113,9 +147,6 @@ def dry_build_and_check():
             f".#nixosConfigurations.{socket.gethostname()}.config.system.build.toplevel",
             f".#homeConfigurations.{getpass.getuser()}@{socket.gethostname()}.activationPackage",
         ],
-        capture_output=True,
-        text=True,
-        check=False,
         cwd=flake_dir,
     )
 
@@ -145,9 +176,7 @@ def dry_build_and_check():
     multiplier = multipliers.get(unit, 1)
     fetch_size = multiplier * val
 
-    hnet_result = run(
-        ["hnet", "status", "eth"], capture_output=True, text=True, check=False
-    ).stdout
+    hnet_result = run(["hnet", "status", "eth"]).stdout
 
     # TODO: hardcoded metered check, expand this
     metered = False
@@ -164,9 +193,6 @@ def dry_build_and_check():
         fuzzel_res = run(
             ["fuzzel", "--dmenu", "--prompt", fuzzel_prompt],
             input="y\nn\n",
-            capture_output=True,
-            text=True,
-            check=False,
         )
         if fuzzel_res.stdout.strip() != "y":
             log("update rejected manually")
@@ -176,7 +202,7 @@ def dry_build_and_check():
     return Status.OK
 
 
-def build():
+def build() -> Status:
     flake_build = run(
         [
             "nix",
@@ -185,8 +211,6 @@ def build():
             f".#nixosConfigurations.{socket.gethostname()}.config.system.build.toplevel",
             f".#homeConfigurations.{getpass.getuser()}@{socket.gethostname()}.activationPackage",
         ],
-        capture_output=True,
-        check=False,
         cwd=flake_dir,
     )
 
@@ -198,31 +222,34 @@ def build():
     return Status.OK
 
 
-def commit():
+def commit() -> Status:
     old_raw = run(
         ["git", "show", "HEAD:flake.lock"],
-        capture_output=True,
-        text=True,
         cwd=flake_dir,
-        check=False,
     )
     updated_inputs = ""
 
     if old_raw.returncode == 0:
-        old_lock = json.loads(old_raw.stdout)
+        old_lock = cast(dict[str, object], json.loads(old_raw.stdout))
         with open(f"{flake_dir}/flake.lock", "r") as f:
-            new_lock = json.load(f)
+            new_lock = cast(dict[str, object], json.load(f))
 
-        old_nodes = old_lock.get("nodes", {})
-        new_nodes = new_lock.get("nodes", {})
+        old_nodes = cast(dict[str, object], old_lock.get("nodes", {}))
+        new_nodes = cast(dict[str, object], new_lock.get("nodes", {}))
         root_node = new_lock.get("root")
 
-        for name, data in new_nodes.items():
+        for name, data_obj in new_nodes.items():
             if name == root_node:
                 continue
-            old_node = old_nodes.get(name, {})
-            old_rev = old_node.get("locked", {}).get("rev")
-            new_rev = data.get("locked", {}).get("rev")
+            data = cast(dict[str, object], data_obj)
+
+            old_node = cast(dict[str, object], old_nodes.get(name, {}))
+
+            old_locked = cast(dict[str, object], old_node.get("locked", {}))
+            new_locked = cast(dict[str, object], data.get("locked", {}))
+
+            old_rev = old_locked.get("rev")
+            new_rev = new_locked.get("rev")
 
             if old_rev and new_rev and old_rev != new_rev:
                 updated_inputs += f"  - {name}\n"
@@ -238,8 +265,6 @@ def commit():
 
     flake_commit = run(
         ["git", "commit", "flake.lock", "-m", commit_msg, "-m", commit_body],
-        capture_output=True,
-        check=False,
         cwd=flake_dir,
     )
 
@@ -251,11 +276,9 @@ def commit():
     return Status.OK
 
 
-def push():
+def push() -> Status:
     flake_push = run(
         ["git", "push", "origin", "main"],
-        capture_output=True,
-        check=False,
         cwd=flake_dir,
     )
 
@@ -267,13 +290,28 @@ def push():
         return Status.ERR
 
 
+def set_args() -> None:
+    parser = argparse.ArgumentParser(prog="fup", description="Fup: Flake Auto-Updater")
+    _ = parser.add_argument("-v", "--verbose", action="store_true")
+    _ = parser.add_argument("-d", "--ignore-dirty", action="store_true")
+    _ = parser.add_argument("-i", "--ignore-internet", action="store_true")
+    args = parser.parse_args(namespace=Args())
+
+    fup_args.verbose = args.verbose
+    fup_args.ignore_dirty = args.ignore_dirty
+    fup_args.ignore_internet = args.ignore_internet
+
+
 def apply(status: Status):
-    if status.is_err() or status.is_stop():
+    if not status.is_ok():
         exit(status.exitcode())
 
 
 def main():
-    apply(check_dirty())
+    set_args()
+
+    apply(check_internet(fup_args.ignore_internet))
+    apply(check_dirty(fup_args.ignore_dirty))
     apply(update())
     apply(dry_build_and_check())
     apply(build())
