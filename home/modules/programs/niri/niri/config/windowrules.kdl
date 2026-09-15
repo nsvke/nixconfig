@@ -95,7 +95,21 @@ window-rule {
 
 window-rule {
     match app-id="^boo$"
+    match app-id="^crono-max$"
     open-fullscreen true
+}
+
+window-rule {
+    match app-id="^crono-min$"
+    open-floating true
+    default-window-height { fixed 18; }
+    default-column-width { fixed 201; }
+    default-floating-position x=19 y=100 relative-to="top-left"
+    border {
+        on
+        width 1
+        inactive-color "#fff600"
+    }
 }
 
 // termfilechooser, center, 60%,60%

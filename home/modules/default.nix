@@ -18,6 +18,7 @@
     bibata-cursors
     mdcat
     cbonsai
+    termdown
     gdu
     duf
     scrcpy
