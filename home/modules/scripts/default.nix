@@ -82,11 +82,11 @@ let
       fuzzel
     ];
     text = ''
-      python3 ${
+      exec python3 ${
         pkgs.writeText "fup.py" (
           builtins.replaceStrings [ "@flakeDir@" ] [ flakeDir ] (builtins.readFile ./fup.py)
         )
-      }
+      } "$@"
     '';
   };
 in

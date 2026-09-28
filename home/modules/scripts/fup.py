@@ -2,6 +2,7 @@ import argparse
 import getpass
 import json
 import re
+import signal
 import socket
 import subprocess
 from dataclasses import dataclass
@@ -305,6 +306,16 @@ def set_args() -> None:
 def apply(status: Status):
     if not status.is_ok():
         exit(status.exitcode())
+
+
+def interrupt(signum=None, frame=None):
+    _ = signal.signal(signal.SIGINT, signal.SIG_IGN)
+    log("interrupted")
+    rollback("interrupted")
+    exit(130)
+
+
+_ = signal.signal(signal.SIGINT, interrupt)
 
 
 def main():
