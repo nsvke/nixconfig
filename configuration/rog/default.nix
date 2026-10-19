@@ -71,7 +71,7 @@
         enable = true;
         settings = {
           General = {
-            EnableNetworkConfiguration = true;
+            EnableNetworkConfiguration = false;
             RoamRetryInterval = 15;
           };
           Network = {
@@ -85,7 +85,7 @@
 
   systemd = {
     network.networks."20-wireless" = {
-      matchConfig.Name = "wlan*";
+      matchConfig.Name = [ "wlan*" "wl*" ];
       networkConfig = {
         DHCP = "yes";
         IgnoreCarrierLoss = "3s";
