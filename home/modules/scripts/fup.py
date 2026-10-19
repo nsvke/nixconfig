@@ -5,6 +5,8 @@ import re
 import signal
 import socket
 import subprocess
+import sys
+import threading
 from dataclasses import dataclass
 from enum import Enum
 from sys import exit
@@ -59,23 +61,55 @@ def run(
     cwd: str | None = None,
     input: str | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(
-        cmd,
-        cwd=cwd,
-        input=input,
-        capture_output=True,
-        text=True,
-        check=False,
+    if not fup_args.verbose:
+        return subprocess.run(
+            cmd, cwd=cwd, input=input, capture_output=True, text=True, check=False
+        )
+
+    print(f"[RUN] {' '.join(cmd)}")
+
+    if input is not None:
+        res = subprocess.run(
+            cmd, cwd=cwd, input=input, capture_output=True, text=True, check=False
+        )
+        if res.stdout:
+            sys.stdout.write(res.stdout)
+        if res.stderr:
+            sys.stderr.write(res.stderr)
+        return res
+
+    process = subprocess.Popen(
+        cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
 
-    if fup_args.verbose:
-        print(f"[RUN] {' '.join(cmd)}")
-        if result.stdout:
-            print(result.stdout, end="")
-        if result.stderr:
-            print(result.stderr, end="")
+    stdout_list = []
+    stderr_list = []
 
-    return result
+    def read_stream(stream, output_list, sys_stream):
+        for line in stream:
+            sys_stream.write(line)
+            sys_stream.flush()
+            output_list.append(line)
+
+    t1 = threading.Thread(
+        target=read_stream, args=(process.stdout, stdout_list, sys.stdout)
+    )
+    t2 = threading.Thread(
+        target=read_stream, args=(process.stderr, stderr_list, sys.stderr)
+    )
+
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+    process.wait()
+
+    return subprocess.CompletedProcess(
+        args=cmd,
+        returncode=process.returncode,
+        stdout="".join(stdout_list),
+        stderr="".join(stderr_list),
+    )
 
 
 def notify(text: str) -> None:
@@ -216,7 +250,7 @@ def build() -> Status:
     )
 
     if flake_build.returncode != 0:
-        log("build failed")
+        log(f"build failed\n---stderr---\n{flake_build.stderr}\n------------")
         rollback("build failed")
         return Status.ERR
 
