@@ -127,6 +127,13 @@ def rollback(notification: str) -> None:
         notify(notification)
 
 
+def indicator(show: bool) -> None:
+    target_fn = "fupStart" if show else "fupStop"
+    _ = run(
+        ["quickshell", "ipc", "call", "modal", target_fn],
+    )
+
+
 def check_dirty(ignore: bool = False) -> Status:
     if (
         run(
@@ -339,6 +346,7 @@ def set_args() -> None:
 
 def apply(status: Status):
     if not status.is_ok():
+        indicator(False)
         exit(status.exitcode())
 
 
@@ -346,6 +354,7 @@ def interrupt(signum=None, frame=None):
     _ = signal.signal(signal.SIGINT, signal.SIG_IGN)
     log("interrupted")
     rollback("interrupted")
+    indicator(False)
     exit(130)
 
 
@@ -354,6 +363,7 @@ _ = signal.signal(signal.SIGINT, interrupt)
 
 def main():
     set_args()
+    indicator(True)
 
     apply(check_internet(fup_args.ignore_internet))
     apply(check_dirty(fup_args.ignore_dirty))
@@ -362,6 +372,8 @@ def main():
     apply(build())
     apply(commit())
     apply(push())
+
+    indicator(False)
 
 
 if __name__ == "__main__":

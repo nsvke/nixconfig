@@ -14,6 +14,7 @@
       Restart = "on-failure";
       RestartPreventExitStatus = "2";
       RestartSec = "1800";
+      KillSignal = "SIGINT";
     };
   };
 

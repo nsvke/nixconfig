@@ -18,7 +18,7 @@ binds {
     MOD+B                               hotkey-overlay-title="toggle bar focus" { spawn "quickshell" "ipc" "call" "modal" "toggleBarFocus"; }
     MOD+SHIFT+M                         hotkey-overlay-title="logout menu" { spawn "quickshell" "ipc" "call" "modal" "togglePowerDialog"; }
     // MOD+BACKSLASH                       hotkey-overlay-title="connection-popup" { spawn "/home/enes/shsh/connection.sh"; }
-    MOD+SHIFT+U                         hotkey-overlay-title="nixos system build" { spawn-sh "footclient -a nixos-rebuild -e sudo nixos-rebuild switch --flake /home/enes/.config/nixos/.#enes && exit" ; }
+    MOD+SHIFT+U                         hotkey-overlay-title="nixos system build" { spawn "systemctl" "--user" "stop" "fup.service"; }
     MOD+CTRL+SHIFT+LEFT                 hotkey-overlay-title="scroll view left" { spawn-sh "niri msg action focus-column-left && niri msg action focus-column-right"; }
     MOD+CTRL+SHIFT+RIGHT                hotkey-overlay-title="scroll view rigth" { spawn-sh "niri msg action focus-column-right && niri msg action focus-column-left"; }
     MOD+CTRL+LEFT                       hotkey-overlay-title="focus double left" { spawn-sh "niri msg action focus-column-left && niri msg action focus-column-left"; }
