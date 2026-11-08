@@ -10,6 +10,7 @@
       "zp" = "WGPU_POWER_PREF=low zeditor .";
       "zed" = "WGPU_POWER_PREF=low zeditor";
       "e" = "exit";
+      "q" = "exit";
       "r" = "reset";
       "screenshot" = "echo 'use ctrl+shift+f1'";
 
